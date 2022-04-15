@@ -12,10 +12,12 @@ def calculate_demographic_data(print_data=True):
     average_age_men = df['age'].where(df['sex'] == 'Male').mean().round(1)
 
     # What is the percentage of people who have a Bachelor's degree?
-    bachelor_degree = df['education'].where(df['education'] == 'Bachelors').value_counts()
+    bachelor_degree = df[(df['education'] == 'Bachelors')][['education']].count()
+  # df['education'].where(df['education'] == 'Bachelors').value_counts()
+  
     all_degree = df['education'].count()
-    percentage_bachelors = (100 *  bachelor_degree / all_degree).round(1)
-
+    percentage_bachelors = (100 *  bachelor_degree / all_degree).round(1)[0]
+    
     # What percentage of people with advanced education (`Bachelors`, `Masters`, or `Doctorate`) make more than 50K?
     # What percentage of people without advanced education make more than 50K?
 
@@ -35,19 +37,17 @@ def calculate_demographic_data(print_data=True):
   
     shape_min_work_hours = df[(df['hours-per-week'] == min_work_hours)].shape[0]
 
-    rich_percentage = (100 * num_min_workers / shape_min_work_hours)
+    rich_percentage = int(100 * num_min_workers / shape_min_work_hours)
 
     # What country has the highest percentage of people that earn >50K?
     earning_country = df[(df['salary'] == '>50K')][['salary', 'native-country']].groupby(['native-country']).count()
-
     country_total = df.groupby('native-country').size()
-
     earning_country['country_total'] = earning_country.salary / country_total
 
     highest_earning_country = earning_country['country_total'].idxmax()
-
+  
     highest_earning_country_percentage = 100 * earning_country['country_total'].max().round(3)
-
+  
     # Identify the most popular occupation for those who earn >50K in India.
     top_IN_occupation = df[(df['native-country'] == 'India')][['occupation']].groupby('occupation').size().idxmax()
 
