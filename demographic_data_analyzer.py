@@ -23,11 +23,11 @@ def calculate_demographic_data(print_data=True):
 
     # with and without `Bachelors`, `Masters`, or `Doctorate`
     higher_education = df[(df['education'].isin (['Bachelors', 'Masters', 'Doctorate'])) & (df['salary'] == '>50K')].shape[0]
-    lower_education = None
+    lower_education = df[(~df['education'].isin (['Bachelors', 'Masters', 'Doctorate'])) & (df['salary'] == '>50K')].shape[0]
 
     # percentage with salary >50K
     higher_education_rich = round(100 * higher_education / df[(df['education'].isin (['Bachelors', 'Masters', 'Doctorate']))].shape[0],1)
-    lower_education_rich = None
+    lower_education_rich = round(100 * lower_education / df[(~df['education'].isin (['Bachelors', 'Masters', 'Doctorate']))].shape[0],1)
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
     min_work_hours = df['hours-per-week'].min()
